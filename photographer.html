@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <link href="css/photographer.css" rel="stylesheet" type="text/css" />
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <link
+      href="https://fonts.googleapis.com/css?family=DM+Sans&display=swap"
+      rel="stylesheet"
+    />
+    <title>Fisheye - photographe</title>
+  </head>
+  <body>
+    <header>
+      <a href="index.html">
+        <img
+          src="assets/images/logo.png"
+          class="logo"
+          alt="Fisheye Home Page"
+        />
+      </a>
+    </header>
+    <main id="main">
+      <section class="photograph-header">
+        <div class="photographer-info">
+          <h1 class="photographer-name"></h1>
+          <p class="photographer-location"></p>
+          <p class="photographer-tagline"></p>
+        </div>
+        <button class="contact_button" onclick="displayModal()">
+          Contactez-moi
+        </button>
+        <img class="photographer-portrait" src="" alt="" />
+      </section>
+
+      <div class="sort-container">
+        <span id="sort-label" class="sr-only">Trier par</span>
+        <div class="custom-dropdown" id="custom-sort" aria-labelledby="sort-label">
+          <button class="dropdown-selected" aria-haspopup="listbox" aria-expanded="false" tabindex="0">
+            <span class="dropdown-selected-text">Popularité</span>
+            <span class="dropdown-arrow" aria-hidden="true">
+              <svg width="18" height="10" viewBox="0 0 18 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 1L9 9L17 1" stroke="white" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </span>
+          </button>
+          <ul class="dropdown-list" tabindex="-1" role="listbox" aria-activedescendant="popularity">
+            <li class="dropdown-option selected" data-value="popularity" id="popularity" role="option" aria-selected="true">Popularité</li>
+            <li class="dropdown-option" data-value="date" id="date" role="option">Date</li>
+            <li class="dropdown-option" data-value="title" id="title" role="option">Titre</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="media-grid"></div>
+
+      <div class="info-bar">
+        <div class="total-likes">
+          <span class="likes-count">0</span>
+          <i class="fas fa-heart"></i>
+        </div>
+        <div class="price-per-day"></div>
+      </div>
+    </main>
+
+    <div id="contact_modal" role="dialog" aria-hidden="true">
+      <div class="modal">
+        <header>
+          <h2>Contactez-moi</h2>
+          <button
+            class="close-modal"
+            onclick="closeModal()"
+            aria-label="Fermer le formulaire"
+          >
+            <img src="assets/icons/close.svg" alt="Fermer" />
+          </button>
+        </header>
+        <form id="contact-form">
+          <div class="form-group">
+            <label for="firstname">Prénom</label>
+            <input type="text" id="firstname" name="firstname" required />
+          </div>
+          <div class="form-group">
+            <label for="lastname">Nom</label>
+            <input type="text" id="lastname" name="lastname" required />
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required />
+          </div>
+          <div class="form-group">
+            <label for="message">Votre message</label>
+            <textarea id="message" name="message" required></textarea>
+          </div>
+          <button type="submit" class="contact_button">Envoyer</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="lightbox" class="lightbox" role="dialog" aria-hidden="true">
+      <button class="lightbox-close" aria-label="Fermer la lightbox">×</button>
+      <button class="lightbox-prev" aria-label="Image précédente">❮</button>
+      <div class="lightbox-content"></div>
+      <button class="lightbox-next" aria-label="Image suivante">❯</button>
+    </div>
+
+    <script src="scripts/utils/contactForm.js"></script>
+    <script src="scripts/pages/photographer.js"></script>
+  </body>
+</html>
