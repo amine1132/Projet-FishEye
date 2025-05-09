@@ -65,26 +65,37 @@ const PhotographerApp = (function() {
             const photographerFolder = getPhotographerFolder(currentPhotographer.name);
             const mediaPath = `assets/Sample Photos/${photographerFolder}/${media.image || media.video}`;
             
-            const mediaElement = media.image
+            const mediaContent = media.image
                 ? `<img src="${mediaPath}" alt="${media.title}">`
                 : `<video src="${mediaPath}" controls></video>`;
             
             article.innerHTML = `
-            <a href="#" class="media-link">
-                ${mediaElement}
+            <a href="#" class="media-link" role="button" tabindex="0" aria-label="Voir ${media.title} en grand format">
+                ${mediaContent}
                 <div class="media-info">
                     <h2 class="media-title">${media.title}</h2>
                     <div class="likes-container">
                         <span class="likes-count">${media.likes}</span>
-                        <i class="fas fa-heart" data-media-id="${media.id}"></i>
+                        <i class="fas fa-heart" data-media-id="${media.id}" role="button" tabindex="0" aria-label="J'aime"></i>
                     </div>
                 </div>
                 </a>
             `;
             
             // Ajout de l'événement pour la lightbox
-            article.querySelector("img, video").addEventListener("click", () => {
+            const mediaElement = article.querySelector("img, video");
+            const mediaLink = article.querySelector(".media-link");
+            
+            mediaElement.addEventListener("click", () => {
                 LightboxManager.open(media);
+            });
+
+            // Ajout de l'événement clavier pour la lightbox
+            mediaLink.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    LightboxManager.open(media);
+                }
             });
             
             // Ajout de l'événement pour les likes
@@ -139,18 +150,51 @@ const PhotographerApp = (function() {
         currentMediaIndex: 0,
         
         init() {
-            document.querySelector(".lightbox-close").addEventListener("click", () => {
-                document.getElementById("lightbox").style.display = "none";
+            const lightbox = document.getElementById("lightbox");
+            const closeBtn = document.querySelector(".lightbox-close");
+            const prevBtn = document.querySelector(".lightbox-prev");
+            const nextBtn = document.querySelector(".lightbox-next");
+
+            // Ajout des attributs ARIA
+            lightbox.setAttribute("role", "dialog");
+            lightbox.setAttribute("aria-label", "Vue détaillée de l'image");
+            closeBtn.setAttribute("aria-label", "Fermer la vue détaillée");
+            prevBtn.setAttribute("aria-label", "Image précédente");
+            nextBtn.setAttribute("aria-label", "Image suivante");
+
+            closeBtn.addEventListener("click", () => {
+                lightbox.style.display = "none";
+                document.querySelector(".media-link").focus(); // Retourne le focus sur le dernier média cliqué
             });
             
-            document.querySelector(".lightbox-prev").addEventListener("click", () => {
+            prevBtn.addEventListener("click", () => {
                 this.currentMediaIndex = (this.currentMediaIndex - 1 + mediaData.length) % mediaData.length;
                 this.updateContent();
             });
             
-            document.querySelector(".lightbox-next").addEventListener("click", () => {
+            nextBtn.addEventListener("click", () => {
                 this.currentMediaIndex = (this.currentMediaIndex + 1) % mediaData.length;
                 this.updateContent();
+            });
+
+            // Gestion des événements clavier
+            document.addEventListener("keydown", (e) => {
+                if (lightbox.style.display === "block") {
+                    switch(e.key) {
+                        case "Escape":
+                            lightbox.style.display = "none";
+                            document.querySelector(".media-link").focus();
+                            break;
+                        case "ArrowLeft":
+                            this.currentMediaIndex = (this.currentMediaIndex - 1 + mediaData.length) % mediaData.length;
+                            this.updateContent();
+                            break;
+                        case "ArrowRight":
+                            this.currentMediaIndex = (this.currentMediaIndex + 1) % mediaData.length;
+                            this.updateContent();
+                            break;
+                    }
+                }
             });
         },
         
@@ -169,14 +213,14 @@ const PhotographerApp = (function() {
             const photographerFolder = getPhotographerFolder(currentPhotographer.name);
             const mediaPath = `assets/Sample Photos/${photographerFolder}/${media.image || media.video}`;
             
-            const mediaElement = media.image
+            const mediaContent = media.image
                 ? `<img src="${mediaPath}" alt="${media.title}">`
                 : `<video src="${mediaPath}" controls></video>`;
             
             // Ajout du titre du média sous l'image/vidéo
             content.innerHTML = `
                 <div class="lightbox-media-container">
-                    ${mediaElement}
+                    ${mediaContent}
                     <h2 class="lightbox-media-title">${media.title}</h2>
                 </div>
             `;
